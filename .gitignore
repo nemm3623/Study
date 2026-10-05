@@ -1,0 +1,25 @@
+# OS / IDE (모든 과제 프로젝트에 적용)
+.DS_Store
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+
+# Java / Gradle / Maven 출력물
+.gradle/
+build/
+target/
+out/
+*.class
+
+# 로컬 환경과 실행 로그
+.env
+.env.*
+!.env.example
+*.log
+
+# 임시 파일
+*.swp
+*~
