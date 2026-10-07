@@ -107,6 +107,15 @@ public class Reservation {
         status = ReservationStatus.CANCELED;
     }
 
+    public void expire(Instant now) {
+        requireReserved();
+        if (now.isBefore(expiresAt)) {
+            throw new IllegalStateException("reservation has not expired");
+        }
+        product.releaseReserved(quantity);
+        status = ReservationStatus.EXPIRED;
+    }
+
     private void requireReserved() {
         if (status != ReservationStatus.RESERVED) {
             throw new IllegalStateException("reservation is not reserved");

@@ -13,11 +13,14 @@ public class ReservationService {
 
     private final ProductRepository products;
     private final ReservationRepository reservations;
+    private final ReservationExpirationService expirationService;
     private final Clock clock;
 
-    public ReservationService(ProductRepository products, ReservationRepository reservations, Clock clock) {
+    public ReservationService(ProductRepository products, ReservationRepository reservations,
+                              ReservationExpirationService expirationService, Clock clock) {
         this.products = products;
         this.reservations = reservations;
+        this.expirationService = expirationService;
         this.clock = clock;
     }
 
@@ -29,6 +32,8 @@ public class ReservationService {
                 || request.quantity() == null || request.quantity() <= 0) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "invalid request");
         }
+
+        expirationService.expireDue();
 
         Product product = products.findByProductId(productId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "product not found"));
@@ -51,14 +56,13 @@ public class ReservationService {
 
     @Transactional(readOnly = true)
     public ReservationResponse get(String reservationId) {
-        Reservation reservation = reservations.findById(reservationId)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                        "RESERVATION_NOT_FOUND", "reservation not found"));
-        return ReservationResponse.from(reservation);
+        expirationService.expireDue();
+        return ReservationResponse.from(findReservation(reservationId));
     }
 
     @Transactional
     public ReservationResponse confirm(String reservationId) {
+        expirationService.expireDue();
         Reservation reservation = findReservation(reservationId);
         if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
             return ReservationResponse.from(reservation);
@@ -70,6 +74,7 @@ public class ReservationService {
 
     @Transactional
     public ReservationResponse cancel(String reservationId) {
+        expirationService.expireDue();
         Reservation reservation = findReservation(reservationId);
         if (reservation.getStatus() == ReservationStatus.CANCELED) {
             return ReservationResponse.from(reservation);
