@@ -7,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import io.github.nemm.study.invertory_reservation.support.ApiException;
+import org.springframework.http.HttpStatus;
 
 @Entity
 @Table(name = "products", uniqueConstraints = @UniqueConstraint(columnNames = "product_id"))
@@ -64,5 +66,13 @@ public class Product {
 
     public int getSoldStock() {
         return soldStock;
+    }
+
+    public void reserve(int quantity) {
+        if (quantity > availableStock) {
+            throw new ApiException(HttpStatus.CONFLICT, "INSUFFICIENT_STOCK", "not enough available stock");
+        }
+        availableStock -= quantity;
+        reservedStock += quantity;
     }
 }
