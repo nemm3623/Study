@@ -94,4 +94,22 @@ public class Reservation {
     public Instant getExpiresAt() {
         return expiresAt;
     }
+
+    public void confirm() {
+        requireReserved();
+        product.confirmReserved(quantity);
+        status = ReservationStatus.CONFIRMED;
+    }
+
+    public void cancel() {
+        requireReserved();
+        product.releaseReserved(quantity);
+        status = ReservationStatus.CANCELED;
+    }
+
+    private void requireReserved() {
+        if (status != ReservationStatus.RESERVED) {
+            throw new IllegalStateException("reservation is not reserved");
+        }
+    }
 }

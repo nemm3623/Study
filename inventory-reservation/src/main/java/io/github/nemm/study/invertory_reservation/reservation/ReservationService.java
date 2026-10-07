@@ -57,6 +57,41 @@ public class ReservationService {
         return ReservationResponse.from(reservation);
     }
 
+    @Transactional
+    public ReservationResponse confirm(String reservationId) {
+        Reservation reservation = findReservation(reservationId);
+        if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
+            return ReservationResponse.from(reservation);
+        }
+        requireReserved(reservation);
+        reservation.confirm();
+        return ReservationResponse.from(reservation);
+    }
+
+    @Transactional
+    public ReservationResponse cancel(String reservationId) {
+        Reservation reservation = findReservation(reservationId);
+        if (reservation.getStatus() == ReservationStatus.CANCELED) {
+            return ReservationResponse.from(reservation);
+        }
+        requireReserved(reservation);
+        reservation.cancel();
+        return ReservationResponse.from(reservation);
+    }
+
+    private Reservation findReservation(String reservationId) {
+        return reservations.findById(reservationId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "RESERVATION_NOT_FOUND", "reservation not found"));
+    }
+
+    private void requireReserved(Reservation reservation) {
+        if (reservation.getStatus() != ReservationStatus.RESERVED) {
+            throw new ApiException(HttpStatus.CONFLICT, "INVALID_RESERVATION_STATE",
+                    "reservation cannot change to the requested state");
+        }
+    }
+
     public record CreationResult(ReservationResponse response, boolean created) {
     }
 }

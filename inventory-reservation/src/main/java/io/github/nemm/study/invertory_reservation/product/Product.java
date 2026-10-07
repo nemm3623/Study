@@ -75,4 +75,22 @@ public class Product {
         availableStock -= quantity;
         reservedStock += quantity;
     }
+
+    public void confirmReserved(int quantity) {
+        requireReserved(quantity);
+        reservedStock -= quantity;
+        soldStock += quantity;
+    }
+
+    public void releaseReserved(int quantity) {
+        requireReserved(quantity);
+        reservedStock -= quantity;
+        availableStock += quantity;
+    }
+
+    private void requireReserved(int quantity) {
+        if (quantity <= 0 || quantity > reservedStock) {
+            throw new IllegalStateException("reserved stock is inconsistent");
+        }
+    }
 }

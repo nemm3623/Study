@@ -32,4 +32,14 @@ public class ReservationController {
     public ReservationResponse get(@PathVariable String reservationId) {
         return reservationService.get(reservationId);
     }
+
+    @PostMapping("/reservations/{reservationId}/confirm")
+    public ReservationResponse confirm(@PathVariable String reservationId) {
+        return reservationService.confirm(reservationId);
+    }
+
+    @PostMapping("/reservations/{reservationId}/cancel")
+    public ReservationResponse cancel(@PathVariable String reservationId) {
+        return reservationService.cancel(reservationId);
+    }
 }
