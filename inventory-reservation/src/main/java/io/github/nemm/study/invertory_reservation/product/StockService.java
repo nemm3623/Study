@@ -19,6 +19,9 @@ public class StockService {
 
     @Transactional(readOnly = true)
     public StockResponse getStock(String productId) {
+        if (productId == null || productId.isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "invalid request");
+        }
         expirationService.expireDue();
         Product product = products.findByProductId(productId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "product not found"));

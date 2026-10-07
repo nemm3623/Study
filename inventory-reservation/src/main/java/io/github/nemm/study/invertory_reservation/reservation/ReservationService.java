@@ -85,6 +85,9 @@ public class ReservationService {
     }
 
     private Reservation findReservation(String reservationId) {
+        if (reservationId == null || reservationId.isBlank()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", "invalid request");
+        }
         return reservations.findById(reservationId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "RESERVATION_NOT_FOUND", "reservation not found"));
