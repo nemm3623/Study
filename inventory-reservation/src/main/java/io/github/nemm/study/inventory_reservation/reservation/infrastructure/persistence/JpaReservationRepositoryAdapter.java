@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JpaReservationRepositoryAdapter implements ReservationRepository {
 
-    private final SpringDataReservationRepository jpaRepository;
+    private final JpaReservationRepository jpaRepository;
 
-    public JpaReservationRepositoryAdapter(SpringDataReservationRepository jpaRepository) {
+    public JpaReservationRepositoryAdapter(JpaReservationRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 

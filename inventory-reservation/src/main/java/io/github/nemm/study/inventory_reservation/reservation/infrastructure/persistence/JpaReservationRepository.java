@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SpringDataReservationRepository extends JpaRepository<Reservation, String> {
+public interface JpaReservationRepository extends JpaRepository<Reservation, String> {
     Optional<Reservation> findByProductAndRequestId(Product product, String requestId);
 
     List<Reservation> findByStatusAndExpiresAtLessThanEqual(ReservationStatus status, Instant now);

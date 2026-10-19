@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class JpaProductRepositoryAdapter implements ProductRepository {
 
-    private final SpringDataProductRepository jpaRepository;
+    private final JpaProductRepository jpaRepository;
 
-    public JpaProductRepositoryAdapter(SpringDataProductRepository jpaRepository) {
+    public JpaProductRepositoryAdapter(JpaProductRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
