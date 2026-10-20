@@ -9,8 +9,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "products", uniqueConstraints = @UniqueConstraint(columnNames = "product_id"))
 public class Product {
 
@@ -32,9 +35,6 @@ public class Product {
 
     @Column(nullable = false)
     private int soldStock;
-
-    protected Product() {
-    }
 
     public static Product initial(String productId, int totalStock) {
         Product product = new Product();

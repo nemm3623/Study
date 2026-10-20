@@ -7,16 +7,14 @@ import io.github.nemm.study.inventory_reservation.reservation.domain.Reservation
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@RequiredArgsConstructor
 public class JpaReservationRepositoryAdapter implements ReservationRepository {
 
     private final JpaReservationRepository jpaRepository;
-
-    public JpaReservationRepositoryAdapter(JpaReservationRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
-    }
 
     @Override
     public Optional<Reservation> findById(String reservationId) {

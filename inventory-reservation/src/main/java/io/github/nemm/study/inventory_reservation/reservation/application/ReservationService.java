@@ -10,24 +10,18 @@ import io.github.nemm.study.inventory_reservation.reservation.domain.Reservation
 import io.github.nemm.study.inventory_reservation.reservation.domain.ReservationStatus;
 import io.github.nemm.study.inventory_reservation.reservation.error.ReservationErrorCode;
 import java.time.Clock;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
 
     private final ProductRepository products;
     private final ReservationRepository reservations;
     private final ReservationExpirationService expirationService;
     private final Clock clock;
-
-    public ReservationService(ProductRepository products, ReservationRepository reservations,
-                              ReservationExpirationService expirationService, Clock clock) {
-        this.products = products;
-        this.reservations = reservations;
-        this.expirationService = expirationService;
-        this.clock = clock;
-    }
 
     @Transactional
     public ReservationCreationResult create(String productId, CreateReservationCommand request) {

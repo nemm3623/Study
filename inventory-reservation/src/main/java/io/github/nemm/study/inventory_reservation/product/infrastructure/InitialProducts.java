@@ -2,18 +2,16 @@ package io.github.nemm.study.inventory_reservation.product.infrastructure;
 
 import io.github.nemm.study.inventory_reservation.product.domain.Product;
 import io.github.nemm.study.inventory_reservation.product.domain.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class InitialProducts implements ApplicationRunner {
 
     private final ProductRepository products;
-
-    public InitialProducts(ProductRepository products) {
-        this.products = products;
-    }
 
     @Override
     public void run(ApplicationArguments args) {

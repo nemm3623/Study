@@ -15,8 +15,11 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.time.Instant;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "reservations", uniqueConstraints =
         @UniqueConstraint(columnNames = {"product_pk", "request_id"}))
 public class Reservation {
@@ -47,9 +50,6 @@ public class Reservation {
 
     @Column(name = "expires_at", nullable = false, updatable = false)
     private Instant expiresAt;
-
-    protected Reservation() {
-    }
 
     public static Reservation create(Product product, String customerId, int quantity,
                                      String requestId, Instant now) {

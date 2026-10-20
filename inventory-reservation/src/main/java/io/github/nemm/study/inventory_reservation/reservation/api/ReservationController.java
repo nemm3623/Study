@@ -3,6 +3,7 @@ package io.github.nemm.study.inventory_reservation.reservation.api;
 import io.github.nemm.study.inventory_reservation.reservation.application.ReservationCreationResult;
 import io.github.nemm.study.inventory_reservation.reservation.application.ReservationService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,14 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class ReservationController {
 
     private final ReservationService reservationService;
-
-    public ReservationController(ReservationService reservationService) {
-        this.reservationService = reservationService;
-    }
 
     @PostMapping("/products/{productId}/reservations")
     public ResponseEntity<ReservationResponse> create(@PathVariable String productId,
