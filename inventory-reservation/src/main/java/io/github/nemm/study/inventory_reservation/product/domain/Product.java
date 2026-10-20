@@ -1,5 +1,7 @@
 package io.github.nemm.study.inventory_reservation.product.domain;
 
+import io.github.nemm.study.inventory_reservation.common.error.BusinessException;
+import io.github.nemm.study.inventory_reservation.product.error.ProductErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -68,7 +70,7 @@ public class Product {
 
     public void reserve(int quantity) {
         if (quantity > availableStock) {
-            throw new InsufficientStockException();
+            throw new BusinessException(ProductErrorCode.INSUFFICIENT_STOCK, "not enough available stock");
         }
         availableStock -= quantity;
         reservedStock += quantity;

@@ -1,6 +1,8 @@
 package io.github.nemm.study.inventory_reservation.reservation.domain;
 
+import io.github.nemm.study.inventory_reservation.common.error.BusinessException;
 import io.github.nemm.study.inventory_reservation.product.domain.Product;
+import io.github.nemm.study.inventory_reservation.reservation.error.ReservationErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -108,7 +110,9 @@ public class Reservation {
     }
 
     public void expire(Instant now) {
-        requireReserved();
+        if (status != ReservationStatus.RESERVED) {
+            throw new IllegalStateException("reservation is not reserved");
+        }
         if (now.isBefore(expiresAt)) {
             throw new IllegalStateException("reservation has not expired");
         }
@@ -118,7 +122,8 @@ public class Reservation {
 
     private void requireReserved() {
         if (status != ReservationStatus.RESERVED) {
-            throw new IllegalStateException("reservation is not reserved");
+            throw new BusinessException(ReservationErrorCode.INVALID_RESERVATION_STATE,
+                    "reservation cannot change to the requested state");
         }
     }
 }

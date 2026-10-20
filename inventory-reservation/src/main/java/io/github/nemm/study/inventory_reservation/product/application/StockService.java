@@ -1,7 +1,8 @@
 package io.github.nemm.study.inventory_reservation.product.application;
 
-import io.github.nemm.study.inventory_reservation.common.application.ApplicationException;
-import io.github.nemm.study.inventory_reservation.common.application.ErrorCode;
+import io.github.nemm.study.inventory_reservation.common.error.BusinessException;
+import io.github.nemm.study.inventory_reservation.common.error.CommonErrorCode;
+import io.github.nemm.study.inventory_reservation.product.error.ProductErrorCode;
 import io.github.nemm.study.inventory_reservation.product.domain.Product;
 import io.github.nemm.study.inventory_reservation.product.domain.ProductRepository;
 import io.github.nemm.study.inventory_reservation.reservation.application.ReservationExpirationService;
@@ -22,11 +23,11 @@ public class StockService {
     @Transactional(readOnly = true)
     public StockResult getStock(String productId) {
         if (productId == null || productId.isBlank()) {
-            throw new ApplicationException(ErrorCode.INVALID_REQUEST, "invalid request");
+            throw new BusinessException(CommonErrorCode.INVALID_REQUEST, "invalid request");
         }
         expirationService.expireDue();
         Product product = products.findByProductId(productId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND, "product not found"));
+                .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND, "product not found"));
         return StockResult.from(product);
     }
 }

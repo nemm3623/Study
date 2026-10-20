@@ -1,12 +1,14 @@
 package io.github.nemm.study.inventory_reservation.reservation.application;
 
-import io.github.nemm.study.inventory_reservation.common.application.ApplicationException;
-import io.github.nemm.study.inventory_reservation.common.application.ErrorCode;
+import io.github.nemm.study.inventory_reservation.common.error.BusinessException;
+import io.github.nemm.study.inventory_reservation.common.error.CommonErrorCode;
 import io.github.nemm.study.inventory_reservation.product.domain.Product;
 import io.github.nemm.study.inventory_reservation.product.domain.ProductRepository;
+import io.github.nemm.study.inventory_reservation.product.error.ProductErrorCode;
 import io.github.nemm.study.inventory_reservation.reservation.domain.Reservation;
 import io.github.nemm.study.inventory_reservation.reservation.domain.ReservationRepository;
 import io.github.nemm.study.inventory_reservation.reservation.domain.ReservationStatus;
+import io.github.nemm.study.inventory_reservation.reservation.error.ReservationErrorCode;
 import java.time.Clock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,19 +35,19 @@ public class ReservationService {
                 || request.customerId() == null || request.customerId().isBlank()
                 || request.requestId() == null || request.requestId().isBlank()
                 || request.quantity() == null || request.quantity() <= 0) {
-            throw new ApplicationException(ErrorCode.INVALID_REQUEST, "invalid request");
+            throw new BusinessException(CommonErrorCode.INVALID_REQUEST, "invalid request");
         }
 
         expirationService.expireDue();
 
         Product product = products.findByProductId(productId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.PRODUCT_NOT_FOUND, "product not found"));
+                .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND, "product not found"));
         var existing = reservations.findByProductAndRequestId(product, request.requestId());
         if (existing.isPresent()) {
             Reservation reservation = existing.get();
             if (!reservation.getCustomerId().equals(request.customerId())
                     || reservation.getQuantity() != request.quantity()) {
-                throw new ApplicationException(ErrorCode.DUPLICATE_REQUEST_MISMATCH,
+                throw new BusinessException(ReservationErrorCode.DUPLICATE_REQUEST_MISMATCH,
                         "requestId was used with different reservation details");
             }
             return new ReservationCreationResult(ReservationResult.from(reservation), false);
@@ -70,7 +72,6 @@ public class ReservationService {
         if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
             return ReservationResult.from(reservation);
         }
-        requireReserved(reservation);
         reservation.confirm();
         return ReservationResult.from(reservation);
     }
@@ -82,24 +83,16 @@ public class ReservationService {
         if (reservation.getStatus() == ReservationStatus.CANCELED) {
             return ReservationResult.from(reservation);
         }
-        requireReserved(reservation);
         reservation.cancel();
         return ReservationResult.from(reservation);
     }
 
     private Reservation findReservation(String reservationId) {
         if (reservationId == null || reservationId.isBlank()) {
-            throw new ApplicationException(ErrorCode.INVALID_REQUEST, "invalid request");
+            throw new BusinessException(CommonErrorCode.INVALID_REQUEST, "invalid request");
         }
         return reservations.findById(reservationId)
-                .orElseThrow(() -> new ApplicationException(ErrorCode.RESERVATION_NOT_FOUND,
+                .orElseThrow(() -> new BusinessException(ReservationErrorCode.RESERVATION_NOT_FOUND,
                         "reservation not found"));
-    }
-
-    private void requireReserved(Reservation reservation) {
-        if (reservation.getStatus() != ReservationStatus.RESERVED) {
-            throw new ApplicationException(ErrorCode.INVALID_RESERVATION_STATE,
-                    "reservation cannot change to the requested state");
-        }
     }
 }
