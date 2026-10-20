@@ -122,8 +122,7 @@ public class Reservation {
 
     private void requireReserved() {
         if (status != ReservationStatus.RESERVED) {
-            throw new BusinessException(ReservationErrorCode.INVALID_RESERVATION_STATE,
-                    "reservation cannot change to the requested state");
+            throw new BusinessException(ReservationErrorCode.INVALID_RESERVATION_STATE);
         }
     }
 }

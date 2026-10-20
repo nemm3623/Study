@@ -29,20 +29,19 @@ public class ReservationService {
                 || request.customerId() == null || request.customerId().isBlank()
                 || request.requestId() == null || request.requestId().isBlank()
                 || request.quantity() == null || request.quantity() <= 0) {
-            throw new BusinessException(CommonErrorCode.INVALID_REQUEST, "invalid request");
+            throw new BusinessException(CommonErrorCode.INVALID_REQUEST);
         }
 
         expirationService.expireDue();
 
         Product product = products.findByProductId(productId)
-                .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND, "product not found"));
+                .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND));
         var existing = reservations.findByProductAndRequestId(product, request.requestId());
         if (existing.isPresent()) {
             Reservation reservation = existing.get();
             if (!reservation.getCustomerId().equals(request.customerId())
                     || reservation.getQuantity() != request.quantity()) {
-                throw new BusinessException(ReservationErrorCode.DUPLICATE_REQUEST_MISMATCH,
-                        "requestId was used with different reservation details");
+                throw new BusinessException(ReservationErrorCode.DUPLICATE_REQUEST_MISMATCH);
             }
             return new ReservationCreationResult(ReservationResult.from(reservation), false);
         }
@@ -83,10 +82,9 @@ public class ReservationService {
 
     private Reservation findReservation(String reservationId) {
         if (reservationId == null || reservationId.isBlank()) {
-            throw new BusinessException(CommonErrorCode.INVALID_REQUEST, "invalid request");
+            throw new BusinessException(CommonErrorCode.INVALID_REQUEST);
         }
         return reservations.findById(reservationId)
-                .orElseThrow(() -> new BusinessException(ReservationErrorCode.RESERVATION_NOT_FOUND,
-                        "reservation not found"));
+                .orElseThrow(() -> new BusinessException(ReservationErrorCode.RESERVATION_NOT_FOUND));
     }
 }

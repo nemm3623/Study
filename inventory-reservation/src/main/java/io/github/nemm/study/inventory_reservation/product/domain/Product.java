@@ -70,7 +70,7 @@ public class Product {
 
     public void reserve(int quantity) {
         if (quantity > availableStock) {
-            throw new BusinessException(ProductErrorCode.INSUFFICIENT_STOCK, "not enough available stock");
+            throw new BusinessException(ProductErrorCode.INSUFFICIENT_STOCK);
         }
         availableStock -= quantity;
         reservedStock += quantity;

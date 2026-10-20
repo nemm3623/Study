@@ -20,11 +20,11 @@ public class StockService {
     @Transactional(readOnly = true)
     public StockResult getStock(String productId) {
         if (productId == null || productId.isBlank()) {
-            throw new BusinessException(CommonErrorCode.INVALID_REQUEST, "invalid request");
+            throw new BusinessException(CommonErrorCode.INVALID_REQUEST);
         }
         expirationService.expireDue();
         Product product = products.findByProductId(productId)
-                .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND, "product not found"));
+                .orElseThrow(() -> new BusinessException(ProductErrorCode.PRODUCT_NOT_FOUND));
         return StockResult.from(product);
     }
 }

@@ -1,5 +1,9 @@
 package io.github.nemm.study.inventory_reservation.common.error;
 
+import org.springframework.http.HttpStatus;
+
 public interface ErrorCode {
-    String code();
+    HttpStatus getStatus();
+    String getMessage();
+    String getCode();
 }
