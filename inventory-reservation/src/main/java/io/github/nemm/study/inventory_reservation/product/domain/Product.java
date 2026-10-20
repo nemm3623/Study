@@ -90,7 +90,7 @@ public class Product {
 
     private void requireReserved(int quantity) {
         if (quantity <= 0 || quantity > reservedStock) {
-            throw new IllegalStateException("reserved stock is inconsistent");
+            throw new IllegalStateException("예약 재고 상태가 일치하지 않습니다.");
         }
     }
 }

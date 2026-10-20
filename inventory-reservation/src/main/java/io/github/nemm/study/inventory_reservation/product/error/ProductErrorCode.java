@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ProductErrorCode implements ErrorCode {
-    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "product not found"),
-    INSUFFICIENT_STOCK(HttpStatus.CONFLICT, "not enough available stock");
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
+    INSUFFICIENT_STOCK(HttpStatus.CONFLICT, "예약 가능한 재고가 부족합니다.");
 
     private final HttpStatus status;
     private final String message;

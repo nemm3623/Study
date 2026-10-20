@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum CommonErrorCode implements ErrorCode {
-    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "invalid request");
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, "올바르지 않은 요청입니다.");
 
     private final HttpStatus status;
     private final String message;

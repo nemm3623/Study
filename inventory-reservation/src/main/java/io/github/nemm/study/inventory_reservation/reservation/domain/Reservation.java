@@ -111,10 +111,10 @@ public class Reservation {
 
     public void expire(Instant now) {
         if (status != ReservationStatus.RESERVED) {
-            throw new IllegalStateException("reservation is not reserved");
+            throw new IllegalStateException("예약 중인 상태가 아닙니다.");
         }
         if (now.isBefore(expiresAt)) {
-            throw new IllegalStateException("reservation has not expired");
+            throw new IllegalStateException("아직 예약이 만료되지 않았습니다.");
         }
         product.releaseReserved(quantity);
         status = ReservationStatus.EXPIRED;

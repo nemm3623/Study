@@ -177,7 +177,7 @@ Content-Type: application/json
 ```json
 {
   "code": "INSUFFICIENT_STOCK",
-  "message": "not enough available stock"
+  "message": "예약 가능한 재고가 부족합니다."
 }
 ```
 
